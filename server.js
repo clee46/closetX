@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/app_dev');
+mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/app_dev');
 
 const authRouter = require(__dirname + '/routes/auth_routes.js');
 const userRouter = require(__dirname + '/routes/user_routes.js');
