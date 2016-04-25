@@ -10,7 +10,7 @@ const itemRouter = require(__dirname + '/routes/item_routes.js');
 
 app.use('/api', authRouter);
 // app.use('/api', userRouter);
-// app.use('/api', itemRouter);
+app.use('/api', itemRouter);
 
 var PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log('Server up on port: ' + PORT));
