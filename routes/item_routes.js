@@ -21,3 +21,19 @@ itemRouter.post('/items', jwtAuth, jsonParser, (req, res) => {
     res.status(200).json(data);
   });
 });
+
+itemRouter.put('/items/:id', jwtAuth, jsonParser, (req, res) => {
+  var itemData = req.body;
+  delete itemData._id;
+  Item.update({_id: req.params.id}, itemData, (err) => {
+    if (err) return handleDBError(err, res);
+    res.status(200).json({msg: 'success'});
+  });
+});
+
+itemRouter.delete('/items/:id', jwtAuth, (req, res) => {
+  Item.remove({_id: req.params.id}, (err) => {
+    if (err) return handleDBError(err, res);
+    res.status(200).json({msg: 'success'});
+  });
+});
