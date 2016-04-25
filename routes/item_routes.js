@@ -6,6 +6,13 @@ const handleDBError = require(__dirname + '/../lib/handle_db_error');
 
 const itemRouter = module.exports = exports = express.Router();
 
+itemRouter.get('/items', jwtAuth, (req, res) => {
+  Item.find({ userId: req.user._id }, (err, data) => {
+    if (err) return handleDBError(err, res);
+    res.status(200).json(data);
+  });
+});
+
 itemRouter.post('/items', jwtAuth, jsonParser, (req, res) => {
   var newItem = new Item(req.body);
   newItem.userId = req.user._id;
