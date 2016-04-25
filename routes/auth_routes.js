@@ -18,13 +18,21 @@ authRouter.post('/signup', jsonParser, (req, res) => {
     return res.status(400).json({ msg: 'Please Enter a Valid Email' });
   }
 
+  if (!(req.body.name.first || '').length) {
+    return res.status(400).json({ msg: 'Please Enter a First Name' });
+  }
+
+  if (!(req.body.name.last || '').length) {
+    return res.status(400).json({ msg: 'Please Enter a Last Name' });
+  }
+
   if (!(req.body.username || '').length) {
     return res.status(400).json({ msg: 'Please Enter a User Name' });
   }
 
-  if (!((req.body.password || '').length > 7)) {
+  if (!((req.body.password || '').length > 6)) {
     return res.status(400)
-      .json({ msg: 'Please Enter a Password Longer Than 7 Characters' });
+      .json({ msg: 'Please Enter a Password Longer Than 6 Characters' });
   }
 
   if (!(req.body.password === req.body.confirmpassword)) {
