@@ -18,11 +18,11 @@ authRouter.post('/signup', jsonParser, (req, res) => {
     return res.status(400).json({ msg: 'Please Enter a Valid Email' });
   }
 
-  if (!(req.body.name.first || '').length) {
+  if (!(req.body.first || '').length) {
     return res.status(400).json({ msg: 'Please Enter a First Name' });
   }
 
-  if (!(req.body.name.last || '').length) {
+  if (!(req.body.last || '').length) {
     return res.status(400).json({ msg: 'Please Enter a Last Name' });
   }
 
