@@ -1,3 +1,3 @@
 const express = require('express');
 
-var userRouter = module.exports = exports = express.Router();
+const userRouter = module.exports = exports = express.Router();
