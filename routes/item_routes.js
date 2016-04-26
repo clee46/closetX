@@ -25,15 +25,32 @@ itemRouter.post('/items', jwtAuth, jsonParser, (req, res) => {
 itemRouter.put('/items/:id', jwtAuth, jsonParser, (req, res) => {
   var itemData = req.body;
   delete itemData._id;
-  Item.update({_id: req.params.id}, itemData, (err) => {
-    if (err) return handleDBError(err, res);
-    res.status(200).json({msg: 'success'});
-  });
+
+  Item.findOne({_id: req.params.id}).exec()
+    .then((item) => {
+      if (String(item.userId) === String(req.user._id)) {
+        Item.update({_id: req.params.id }, itemData, (err, data) => {
+          if (err) return handleDBError(err, res);
+          res.status(200).json({msg: 'Updated item'});
+        });
+      }
+      else {
+        res.status(200).json({msg: 'You are not authorized to update this item'});
+      }
+    })
 });
 
 itemRouter.delete('/items/:id', jwtAuth, (req, res) => {
-  Item.remove({_id: req.params.id}, (err) => {
-    if (err) return handleDBError(err, res);
-    res.status(200).json({msg: 'success'});
-  });
+  Item.findOne({_id: req.params.id}).exec()
+    .then((item) => {
+      if (String(item.userId) === String(req.user._id)) {
+        Item.remove({_id: req.params.id}, (err) => {
+          if (err) return handleDBError(err, res);
+          res.status(200).json({msg: 'Deleted item'});
+        });
+      }
+      else {
+        res.status(200).json({msg: 'You are not authorized to delete this item'});
+      }
+    })
 });
