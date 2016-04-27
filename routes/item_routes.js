@@ -35,7 +35,7 @@ itemRouter.put('/items/:id', jwtAuth, jsonParser, (req, res) => {
         });
       }
       else {
-        res.status(200).json({msg: 'You are not authorized to update this item'});
+        res.status(401).json({msg: 'You are not authorized to update this item'});
       }
     })
 });
@@ -50,7 +50,7 @@ itemRouter.delete('/items/:id', jwtAuth, (req, res) => {
         });
       }
       else {
-        res.status(200).json({msg: 'You are not authorized to delete this item'});
+        res.status(401).json({msg: 'You are not authorized to delete this item'});
       }
     })
 });

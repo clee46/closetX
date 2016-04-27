@@ -5,10 +5,12 @@
   * [Creating a New User](#signup)
   * [Logging in to Existing User](#login)
 * [Working With Items](#items)
-  * [Creating a New Item](#newItem)
+  * [Creating a New Item](#createItem)
   * [Retrieving a User's Items](#getItems)
+  * [Updating an Existing Item](#updateItem)
+  * [Deleting an Existing Item](#deleteItem)
 
-## <a id=#auth></a> Signup and Login
+## <a id=#auth"></a> Signup and Login
 
 ### <a id="signup"></a>Creating a New User
 
@@ -89,7 +91,7 @@ The server responds with status 401 and the following messages if the user does 
 
 ```
 
-## <a id=#items></a> Working With Items
+## <a id="items"></a> Working With Items
 
 All item routes are protected.  A user must be logged in and attach their authorization token to the request header like this:
 
@@ -99,7 +101,7 @@ All item routes are protected.  A user must be logged in and attach their author
 }
 ```
 
-###<a id="newItem"></a>Create a New Item
+###<a id="createItem"></a>Creating a New Item
 
 Send a POST request to base_URL/api/items where the request body looks like this (don't forget to assign the authorization token to the request header as shown above):
 
@@ -157,4 +159,38 @@ The server will respond with an array of JSON objects (or an empty array if the 
     "__v": 0
   }
 ]
+```
+
+### <a id="updateItem"></a> Updating an Existing Item
+
+Send a PUT request to base_URL/api/items/:id where the request body looks like this (don't forget to assign the authorization token to the request header as shown above):
+
+```js
+{
+    "description": "The Updated Description",
+    "size": "updated size",
+    "color": "updated color",
+    "imageUrl": "http://www.image.com/update.jpg"
+}
+```
+
+If successful, the server will respond with status 200 and a simple success message.  However, if the current logged in user is not the one who created the item, then the item is not updated and a status 401 message is returned:
+
+
+```js
+{
+  msg: 'You are not authorized to update this item'
+}
+```
+
+### <a id="deleteItem"></a> Deleting an Existing Item
+
+Send a DELETE request to base_URL/api/items/:id. Don't forget to assign the authorization token to the request header as shown above.
+
+If successful, the server will respond with status 200 and a simple success message.  However, if the current logged in user is not the one who created the item, then the item is not updated and a status 401 message is returned:
+
+```js
+{
+  msg: 'You are not authorized to delete this item'
+}
 ```
