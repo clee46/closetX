@@ -3,7 +3,7 @@
 ## Table of Contents
 * [Creating a New User](#signup)
 
-### <a name="signup"></a>Creating a New User
+### <a id="signup"></a>Creating a New User
 
 Send a POST request to base_URL/api/signup where the request body looks like this:
 
