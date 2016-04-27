@@ -1,10 +1,11 @@
 # ClosetX REST API
 
-## Usage
+## Table of Contents
+* [Creating a New User](#signup)
 
-### Creating a New User
+### <a name="signup"></a>Creating a New User
 
-The request body should look like this:
+Send a POST request to base_URL/api/signup where the request body looks like this:
 
 ```js
 
@@ -19,7 +20,7 @@ The request body should look like this:
 
 ```
 
-If the user already exists in the database, the server will respond with status 400 and the following message:
+If the user already exists in the database (i.e. the username or e-mail already exists), the server will respond with status 400 and the following message:
 
 ```js
 
@@ -38,3 +39,5 @@ The server will also respond with status 400 and corresponding message for the f
 * Username not provided
 * Password not long enough
 * "password" and "confirmpassword" properties do not match
+
+### Logging into an existing user
