@@ -10,7 +10,7 @@
   * [Updating an Existing Item](#updateItem)
   * [Deleting an Existing Item](#deleteItem)
 
-## <a id=#auth"></a> Signup and Login
+## <a id="auth"></a> Signup and Login
 
 ### <a id="signup"></a>Creating a New User
 
