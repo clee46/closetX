@@ -81,11 +81,26 @@ connectionRouter.post('/connections', jwtAuth, jsonParser, (req, res) => {
     .then((data) => {
       if (!data) throw new Error('Attempting to Connect to Invalid User');
       // if the user is valid, check if connection already exists
-      return Connection.findOne({ user1: req.user._id, user2: req.body.userId }).exec()
+      return Connection.find({
+        $or: [
+          { user1: req.user._id, user2: req.body.userId, accepted: true },
+          { user1: req.body.userId, user2: req.user._id, accepted: true }
+        ]}).exec();
     })
     .then((data) => {
+      console.log(data.length);
+      if (data.length !== 0) throw new Error('Already Connected to that User');
+      // if the user is valid, check if connection already exists
+      return Connection.find({
+        $or: [
+          { user1: req.user._id, user2: req.body.userId, accepted: false },
+          { user1: req.body.userId, user2: req.user._id, accepted: false }
+        ]}).exec();
+    })
+    .then((data) => {
+      console.log(data.length);
       // if it does, throw an error
-      if (data) throw new Error('Already connected to user');
+      if (data.length !== 0) throw new Error('Request Already Pending');
       // if it doesn't, create the connection
       var newConnection = new Connection();
       newConnection.user1 = req.user._id;
@@ -109,19 +124,59 @@ connectionRouter.post('/connections', jwtAuth, jsonParser, (req, res) => {
 connectionRouter.put('/connections/:id', jwtAuth, jsonParser, (req, res) => {
   var connectionData = req.body;
   delete connectionData._id;
-  Connection.update({_id: req.params.id}, { accepted: true }, (err) => {
-    if (err) return handleDBError(err, res);
-    res.status(200).json({msg: 'Accepted connection'});
-  });
+
+  Connection.findOne({ user1: req.params.id, user2: req.user._id, accepted: true }).exec()
+    .then((data) => {
+      if (data) throw new Error('Already Connected to User');
+      // if the user is valid, check if connection already exists
+      return Connection.update({ user1: req.params.id, user2: req.user._id }, { accepted: true }).exec();
+    })
+    .then((data) => {
+      console.log(data);
+      if (data.nModified === 0) throw new Error('No pending requests from that user');
+      if (data.nModified === 1) return res.status(200).json({msg: 'Accepted connection'});
+    })
+    .catch((err) => {
+      // Check if this was an error we threw instead of a
+      // mongoose promise rejection
+      if (err instanceof Error) {
+        return res.status(400).json({ msg: err.message });
+      }
+      handleDBError(err, res);
+    });
 });
 
 /* Delete a connection if you no longer want to be connected to a user.
   :id specifies the user that you want to disconnect from */
 connectionRouter.delete('/connections/:id', jwtAuth, (req, res) => {
+
   console.log(req.params.id);
   console.log(req.user._id);
-  Connection.remove({ user1: req.params.id, user2: req.user._id }, (err, data) => {
-    if (err) return handleDBError(err, res);
-    res.status(200).json({msg: 'Deleted connection'});
-  });
+
+  Connection.find({
+    $or: [
+      { user1: req.params.id, user2: req.user._id, accepted: true },
+      { user1: req.user._id, user2: req.params.id, accepted: true }
+    ]}).exec()
+    .then((data) => {
+      console.log(data);
+      if (String(req.params.id) === String(req.user._id))
+        throw new Error('Cannot Delete Connection to Oneself');
+      if (data.length === 0) throw new Error('You Are Not Connected To That User');
+      // if the user is valid, check if connection already exists
+      return Connection.remove({ user1: req.params.id, user2: req.user._id, accepted: true }).exec();
+    })
+    .then((data) => {
+      console.log(data);
+      if (data.result.n === 0) throw new Error('Connection was not deleted');
+      if (data.result.n === 1) return res.status(200).json({msg: 'Deleted connection'});
+    })
+    .catch((err) => {
+      // Check if this was an error we threw instead of a
+      // mongoose promise rejection
+      if (err instanceof Error) {
+        return res.status(400).json({ msg: err.message });
+      }
+      handleDBError(err, res);
+    });
 });

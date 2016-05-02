@@ -1,14 +1,22 @@
 # ClosetX REST API
 
 ## Table of Contents
-* [Signup and Login](#auth)
+* [User Accounts](#auth)
   * [Creating a New User](#signup)
   * [Logging in to Existing User](#login)
+  * [Updating User Profile](#profile)
 * [Working With Items](#items)
   * [Creating a New Item](#createItem)
   * [Retrieving a User's Items](#getItems)
   * [Updating an Existing Item](#updateItem)
   * [Deleting an Existing Item](#deleteItem)
+* [Connecting to Other Users](#connections)
+  * [Sending a Connection Request](#request)
+  * [Retrieving Pending Requests](#pending)
+  * [Retrieving Accepted Requests](#connected)
+  * [Accepting a Request](#accept)
+  * [Deleting a Connection](#delete)
+
 
 ## <a id="auth"></a> Signup and Login
 
@@ -90,6 +98,8 @@ The server responds with status 401 and the following messages if the user does 
 }
 
 ```
+
+### <a id="profile"></a>Updating User Profile
 
 ## <a id="items"></a> Working With Items
 
@@ -194,3 +204,55 @@ If successful, the server will respond with status 200 and a simple success mess
   msg: 'You are not authorized to delete this item'
 }
 ```
+
+## <a id="connections"></a> Connecting to Other Users
+
+All connection routes are protected.  A user must be logged in and attach their authorization token to the request header like this:
+
+```js
+{
+    "token": authorization_token
+}
+```
+
+### <a id="request"></a> Sending a Connection Request
+
+Send a POST request to base_URL/api/connections. Don't forget to assign the authorization token to the request header as shown above.
+
+```js
+{
+  "userId": "571fb29204ca4f4e1b93a51b"
+}
+```
+
+### <a id="pending"></a> Retrieving Pending Requests
+
+Send a GET request to base_URL/api/pending. Don't forget to assign the authorization token to the request header as shown above.
+
+Server responds with an array of Connection objects with an added property "username" indicating the username of the user who sent the invitation request.
+
+```js
+[
+  {
+    "_id": "57278323e017a2de0430bc87",
+    "user2": "571fb29204ca4f4e1b93a51b",
+    "user1": "571fb27d04ca4f4e1b93a51a",
+    "__v": 0,
+    "accepted": false,
+    "username": "requester"
+  }
+]
+
+```
+
+### <a id="connected"></a> Retrieving Accepted Requests
+
+Send a GET request to base_URL/api/connections. Don't forget to assign the authorization token to the request header as shown above.
+
+### <a id="accepted"></a> Accepting a Request
+
+Send a PUT request to base_URL/api/connections/:id. Don't forget to assign the authorization token to the request header as shown above.
+
+### <a id="delete"></a> Deleting a Connection
+
+Send a DELETE request to base_URL/api/connections/:id. Don't forget to assign the authorization token to the request header as shown above.
