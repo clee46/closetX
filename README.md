@@ -248,7 +248,7 @@ Server responds with an array of Connection objects with an added property "user
 
 Send a GET request to base_URL/api/connections. Don't forget to assign the authorization token to the request header as shown above.
 
-Server responds with an array of Connection objects with an added property "username" indicating the username of the user who sent the invitation request.
+Server responds with an array of Connection objects with the added property "username" indicating the username of the user who sent the invitation request.
 
 ```js
 [
@@ -265,7 +265,9 @@ Server responds with an array of Connection objects with an added property "user
 
 ### <a id="accepted"></a> Accepting a Request
 
-Send a PUT request to base_URL/api/connections/:id. Don't forget to assign the authorization token to the request header as shown above.
+Send a PUT request to base_URL/api/connections/:id where :id is the database id of the user that you want to accept a connection request from. Don't forget to assign the authorization token to the request header as shown above.
+
+The server will respond with status 200 with the following message:
 
 ```js
 {
@@ -275,7 +277,9 @@ Send a PUT request to base_URL/api/connections/:id. Don't forget to assign the a
 
 ### <a id="delete"></a> Deleting a Connection
 
-Send a DELETE request to base_URL/api/connections/:id. Don't forget to assign the authorization token to the request header as shown above.
+Send a DELETE request to base_URL/api/connections/:id where :id is the database id of the user that you want to disconnect from.  Don't forget to assign the authorization token to the request header as shown above.
+
+The server will respond with status 200 with the following message:
 
 ```js
 {
