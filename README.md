@@ -242,17 +242,43 @@ Server responds with an array of Connection objects with an added property "user
     "username": "requester"
   }
 ]
-
 ```
 
 ### <a id="connected"></a> Retrieving Accepted Requests
 
 Send a GET request to base_URL/api/connections. Don't forget to assign the authorization token to the request header as shown above.
 
+Server responds with an array of Connection objects with an added property "username" indicating the username of the user who sent the invitation request.
+
+```js
+[
+  {
+    "_id": "57278323e017a2de0430bc87",
+    "user2": "571fb29204ca4f4e1b93a51b",
+    "user1": "571fb27d04ca4f4e1b93a51a",
+    "__v": 0,
+    "accepted": true,
+    "username": "requester"
+  }
+]
+```
+
 ### <a id="accepted"></a> Accepting a Request
 
 Send a PUT request to base_URL/api/connections/:id. Don't forget to assign the authorization token to the request header as shown above.
 
+```js
+{
+  msg: 'Accepted connection'
+}
+```
+
 ### <a id="delete"></a> Deleting a Connection
 
 Send a DELETE request to base_URL/api/connections/:id. Don't forget to assign the authorization token to the request header as shown above.
+
+```js
+{
+  msg: 'Deleted connection'
+}
+```
